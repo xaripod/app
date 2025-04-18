@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SlideCraft - Editor de Presentaciones Profesional</title>
+    <title>Xaripod - Editor de Presentaciones Profesional</title>
     <!-- Estilos de Quill.js -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <!-- Font Awesome para íconos -->
@@ -621,7 +621,7 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script>
         /**
-         * SlideCraft - Editor de Presentaciones Profesional
+         * Xaripod - Editor de Presentaciones Profesional
          * Gestiona diapositivas con texto, imágenes y formas, con soporte para deshacer/rehacer,
          * exportación/importación, y una interfaz optimizada.
          */
@@ -689,7 +689,7 @@
         // --- Manejador de Errores ---
         const ErrorHandler = {
             handle(message, error) {
-                console.error(`[SlideCraft Error] ${message}:`, error);
+                console.error(`[Xaripod Error] ${message}:`, error);
                 alert(`Error: ${message}`);
             }
         };
@@ -1580,7 +1580,7 @@
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `slidecraft-presentation-${Date.now()}.json`;
+                    a.download = `Xaripod-presentation-${Date.now()}.json`;
                     a.click();
                     URL.revokeObjectURL(url);
                 } catch (e) {
@@ -1830,7 +1830,7 @@
                 if (appState.slides.length > 0) {
                     const initialTitle = {
                         type: 'text',
-                        content: '<h1 style="margin:0;font-size:36px;">Bienvenido a SlideCraft</h1>',
+                        content: '<h1 style="margin:0;font-size:36px;">Bienvenido a Xaripod</h1>',
                         x: 50,
                         y: 50,
                         width: 860,
