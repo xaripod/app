@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xaripod - Editor de Presentaciones Profesional</title>
+    <title>SlideCraft - Editor de Presentaciones Profesional</title>
     <!-- Estilos de Quill.js -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <!-- Font Awesome para íconos -->
@@ -386,16 +386,32 @@
         }
         
         .presentation-slide {
-            width: 90vw; /* Ocupa el 90% del ancho de la pantalla */
-            max-width: 1280px; /* Limita el tamaño máximo para pantallas grandes */
-            aspect-ratio: 16 / 9; /* Mantiene la proporción 16:9 */
-            max-height: 90vh; /* Asegura que no exceda el alto de la pantalla */
-            background: #fff;
-            position: relative;
-            overflow: hidden;
-            display: block !important; /* Cambiado de flex a block para evitar conflictos */
-            box-sizing: border-box; /* Incluye el padding en el tamaño */
-        }
+    width: min(960px, 90vw);
+    height: calc(min(960px, 90vw) * 9 / 16);
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    display: block !important;
+    box-sizing: border-box;
+    
+}
+
+
+
+
+
+
+.presentation-mode .presentation-slide > .text-editor,
+.presentation-mode .presentation-slide > img,
+.presentation-mode .presentation-slide > .shape {
+    transform: translateX(18px) !important;
+}
+
+
+
+
+
+
         
         .presentation-controls {
             position: fixed;
@@ -490,6 +506,8 @@
                 font-size: 12px;
             }
         }
+
+
     </style>
 </head>
 <body>
@@ -603,7 +621,7 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script>
         /**
-         * Xaripod - Editor de Presentaciones Profesional
+         * SlideCraft - Editor de Presentaciones Profesional
          * Gestiona diapositivas con texto, imágenes y formas, con soporte para deshacer/rehacer,
          * exportación/importación, y una interfaz optimizada.
          */
@@ -671,7 +689,7 @@
         // --- Manejador de Errores ---
         const ErrorHandler = {
             handle(message, error) {
-                console.error(`[Xaripod Error] ${message}:`, error);
+                console.error(`[SlideCraft Error] ${message}:`, error);
                 alert(`Error: ${message}`);
             }
         };
@@ -1812,7 +1830,7 @@
                 if (appState.slides.length > 0) {
                     const initialTitle = {
                         type: 'text',
-                        content: '<h1 style="margin:0;font-size:36px;">Bienvenido a Xaripod</h1>',
+                        content: '<h1 style="margin:0;font-size:36px;">Bienvenido a SlideCraft</h1>',
                         x: 50,
                         y: 50,
                         width: 860,
