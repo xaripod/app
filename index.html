@@ -121,73 +121,79 @@
         grid-column: 2;
         grid-row: 1;
         background: #fff;
-        padding: 8px 16px;
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.07);
         z-index: 1000;
         border-bottom: 1px solid #e2e8f0;
-        gap: 8px;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
     }
+    /* Fila 1 y Fila 2 de la toolbar */
+    .toolbar-row {
+        display: flex;
+        align-items: center;
+        padding: 4px 12px;
+        gap: 2px;
+        flex-wrap: nowrap;
+        min-height: 40px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .toolbar-row:last-child { border-bottom: none; }
     .toolbar-group {
         display: flex;
         align-items: center;
-        margin-right: 8px;
-        padding-right: 8px;
+        padding: 0 6px;
         border-right: 1px solid #e2e8f0;
+        gap: 2px;
         flex-shrink: 0;
     }
+    .toolbar-group:last-child { border-right: none; }
     .top-toolbar button {
         background: #edf2f7;
         color: #2d3748;
         border: 1px solid #cbd5e0;
-        padding: 8px;
+        padding: 6px;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 13px;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        margin-right: 8px;
-        transition: all 0.2s;
+        width: 30px;
+        height: 30px;
+        transition: all 0.15s;
         touch-action: manipulation;
+        flex-shrink: 0;
     }
     .top-toolbar button:hover {
         background: #e2e8f0;
         border-color: #a0aec0;
     }
     .top-toolbar input[type="text"] {
-        padding: 8px 12px;
+        padding: 5px 8px;
         border: 1px solid #cbd5e0;
         border-radius: 4px;
-        margin-right: 8px;
-        width: 200px;
-        font-size: 13px;
+        width: 160px;
+        font-size: 12px;
+        height: 30px;
     }
-    .top-toolbar input[type="file"] {
-        display: none;
-    }
-    .format-toolbar select {
-        padding: 6px;
+    .top-toolbar input[type="file"] { display: none; }
+    .format-toolbar select,
+    .toolbar-row select {
+        padding: 4px 6px;
         border: 1px solid #cbd5e0;
         border-radius: 4px;
-        margin-right: 8px;
-        font-size: 13px;
-        height: 36px;
+        font-size: 12px;
+        height: 30px;
+        cursor: pointer;
+        background: #fff;
     }
-    .format-toolbar input[type="color"] {
-        width: 36px;
-        height: 36px;
-        padding: 0;
+    .top-toolbar input[type="color"] {
+        width: 30px;
+        height: 30px;
+        padding: 1px;
         border: 1px solid #cbd5e0;
         border-radius: 4px;
         cursor: pointer;
-        margin-right: 8px;
     }
     .shapes-menu {
         position: relative;
@@ -237,16 +243,17 @@
         background: #fff;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         border-radius: 8px;
     }
     .slide {
         width: 100%;
-        height: 100%;
-        position: absolute;
+        min-height: 100%;
+        position: relative;
         display: none;
         padding: 40px;
         background: #fff;
+        overflow: visible;
     }
     .slide.active {
         display: block;
@@ -475,9 +482,306 @@
         pointer-events: none;
     }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+        to   { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
+
+    /* === ZOOM === */
+    .zoom-controls { display:flex; align-items:center; gap:4px; }
+    .zoom-controls span { font-size:12px; min-width:38px; text-align:center; color:#4a5568; font-weight:500; }
+
+    /* === FONDO DE DIAPOSITIVA === */
+    .bg-menu { position:relative; }
+    .bg-dropdown {
+        position:fixed; background:#fff;
+        border:1px solid #cbd5e0; border-radius:6px;
+        box-shadow:0 6px 20px rgba(0,0,0,.15); z-index:9999;
+        display:none; padding:12px; min-width:230px;
+        flex-direction:column; gap:10px;
+    }
+    .bg-dropdown label { font-size:12px; color:#4a5568; margin-bottom:2px; display:block; }
+    .bg-dropdown input[type="color"] { width:100%; height:32px; border:1px solid #cbd5e0; border-radius:4px; cursor:pointer; padding:0; }
+    .bg-dropdown select { width:100%; padding:5px; border:1px solid #cbd5e0; border-radius:4px; font-size:12px; }
+    .bg-dropdown .bg-gradient-row { display:flex; gap:6px; }
+    .bg-dropdown .bg-gradient-row input[type="color"] { flex:1; }
+
+    /* === UNDO/REDO BADGE === */
+    .undo-redo-wrap { position:relative; display:inline-flex; }
+    .history-badge {
+        position:absolute; top:-5px; right:-5px;
+        background:#3182ce; color:#fff; font-size:9px; font-weight:700;
+        border-radius:8px; padding:1px 4px; pointer-events:none;
+        min-width:14px; text-align:center; line-height:14px;
+    }
+
+    /* === DRAG REORDER SIDEBAR === */
+    .thumbnail.drag-over { border-color:#f6ad55 !important; background:#2d3748; transform:scale(1.03); }
+    .thumbnail.dragging-thumb { opacity:0.4; }
+
+    /* === TRANSICIONES PRESENTACIÓN === */
+    .presentation-slide.anim-fade       { animation: pres-fade 0.4s ease; }
+    .presentation-slide.anim-slide-left { animation: pres-slide-left 0.35s ease; }
+    .presentation-slide.anim-slide-right{ animation: pres-slide-right 0.35s ease; }
+    .presentation-slide.anim-zoom       { animation: pres-zoom 0.35s ease; }
+    @keyframes pres-fade        { from{opacity:0}                              to{opacity:1} }
+    @keyframes pres-slide-left  { from{opacity:0;transform:translateX(60px)}  to{opacity:1;transform:translateX(0)} }
+    @keyframes pres-slide-right { from{opacity:0;transform:translateX(-60px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes pres-zoom        { from{opacity:0;transform:scale(.92)}         to{opacity:1;transform:scale(1)} }
+    .transition-select { padding:6px; border:1px solid #cbd5e0; border-radius:4px; font-size:12px; height:36px; cursor:pointer; }
+
+    /* === DRAG HANDLE Y RESIZE PARA CUADROS DE TEXTO === */
+    .drag-handle {
+        position: absolute;
+        top: -22px;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background: #3182ce;
+        border-radius: 4px 4px 0 0;
+        cursor: grab;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 102;
+        gap: 3px;
+        user-select: none;
+    }
+    .drag-handle::before,
+    .drag-handle::after,
+    .drag-handle span {
+        content: '';
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: rgba(255,255,255,0.7);
+        border-radius: 2px;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    .draggable.selected .drag-handle { display: flex; }
+
+    /* Resize handles — 8 puntos */
+    .resize-handle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #fff;
+        border: 2px solid #3182ce;
+        border-radius: 50%;
+        z-index: 103;
+        display: none;
+        box-sizing: border-box;
+    }
+    .draggable.selected .resize-handle { display: block; }
+    .resize-handle.nw  { top:-5px;  left:-5px;  cursor:nw-resize; }
+    .resize-handle.n   { top:-5px;  left:calc(50% - 5px); cursor:n-resize; }
+    .resize-handle.ne  { top:-5px;  right:-5px; cursor:ne-resize; }
+    .resize-handle.e   { top:calc(50% - 5px); right:-5px; cursor:e-resize; }
+    .resize-handle.se  { bottom:-5px; right:-5px; cursor:se-resize; }
+    .resize-handle.s   { bottom:-5px; left:calc(50% - 5px); cursor:s-resize; }
+    .resize-handle.sw  { bottom:-5px; left:-5px; cursor:sw-resize; }
+    .resize-handle.w   { top:calc(50% - 5px); left:-5px; cursor:w-resize; }
+
+    /* Cuadro de texto: crece con el contenido verticalmente */
+    .draggable.text-editor {
+        overflow: visible;
+        width: 250px;
+        min-width: 80px;
+        min-height: 40px;
+        height: auto !important;   /* siempre se adapta al contenido */
+    }
+    .draggable.text-editor .ql-container {
+        height: auto !important;
+    }
+    .draggable.text-editor .ql-editor {
+        padding: 4px 8px;
+        min-height: 36px;
+        height: auto !important;
+        overflow: visible !important;
+        cursor: text;
+        user-select: text;
+        -webkit-user-select: text;
+    }
+
+    /* === MODO OSCURO === */
+    body.dark-mode { background: #0d1117; color: #e2e8f0; }
+    body.dark-mode .top-toolbar { background: #161b22; border-color: #30363d; }
+    body.dark-mode .toolbar-row { border-color: #30363d; }
+    body.dark-mode .toolbar-group { border-color: #30363d; }
+    body.dark-mode .top-toolbar button { background: #21262d; color: #e2e8f0; border-color: #30363d; }
+    body.dark-mode .top-toolbar button:hover { background: #30363d; }
+    body.dark-mode .top-toolbar input[type="text"],
+    body.dark-mode .top-toolbar select,
+    body.dark-mode .format-toolbar select,
+    body.dark-mode .toolbar-row select { background: #21262d; color: #e2e8f0; border-color: #30363d; }
+    body.dark-mode .slide-container { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    body.dark-mode .slide { background: #1e2330; }
+    body.dark-mode .main-content { background: #0d1117; }
+    body.dark-mode .element-panel { background: #161b22; color: #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    body.dark-mode .element-panel h4 { color: #e2e8f0; }
+    body.dark-mode .panel-group label { color: #a0aec0; }
+    body.dark-mode .panel-group input[type="number"] { background: #21262d; color: #e2e8f0; border-color: #30363d; }
+    body.dark-mode .zoom-controls span { color: #a0aec0; }
+    body.dark-mode .autosave-indicator { color: #48bb78; }
+    body.dark-mode .notes-area { background: #21262d; color: #e2e8f0; border-color: #30363d; }
+    body.dark-mode .notes-panel { background: #161b22; border-color: #30363d; }
+    body.dark-mode .notes-panel label { color: #a0aec0; }
+    body.dark-mode .history-panel { background: #161b22; border-color: #30363d; }
+    body.dark-mode .history-item { border-color: #30363d; color: #e2e8f0; }
+    body.dark-mode .history-item:hover { background: #21262d; }
+    body.dark-mode .history-item.current { background: #1d3a5f; border-color: #3182ce; }
+    body.dark-mode .shortcuts-overlay { background: rgba(0,0,0,0.85); }
+    body.dark-mode .shortcuts-panel { background: #161b22; color: #e2e8f0; }
+    body.dark-mode .shortcuts-panel h3 { color: #e2e8f0; }
+    body.dark-mode .shortcuts-section h4 { color: #90cdf4; }
+    body.dark-mode .shortcut-row { border-color: #30363d; }
+    body.dark-mode .shortcut-row kbd { background: #21262d; border-color: #30363d; color: #e2e8f0; }
+    body.dark-mode .pres-name-input { background: #21262d; color: #e2e8f0; border-color: #30363d; }
+
+    /* === NOMBRE DE PRESENTACIÓN === */
+    .pres-name-input {
+        border: none;
+        border-bottom: 2px solid transparent;
+        background: transparent;
+        font-size: 13px;
+        font-weight: 600;
+        color: #2d3748;
+        padding: 2px 6px;
+        width: 180px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .pres-name-input:focus { border-bottom-color: #3182ce; }
+
+    /* === GRILLA === */
+    .slide.grid-on {
+        background-image:
+            linear-gradient(rgba(99,179,237,0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(99,179,237,0.15) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    /* === NOTAS DEL PRESENTADOR === */
+    .notes-panel {
+        background: #fff;
+        border-top: 2px solid #e2e8f0;
+        padding: 8px 16px;
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        grid-column: 2;
+        grid-row: 3;
+    }
+    .notes-panel.visible { display: flex; }
+    .notes-panel label { font-size: 11px; color: #718096; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .notes-area {
+        width: 100%;
+        height: 70px;
+        resize: none;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 6px 10px;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        background: #f7fafc;
+    }
+    .notes-area:focus { border-color: #3182ce; }
+
+    /* === PANEL HISTORIAL === */
+    .history-panel {
+        position: fixed;
+        top: 90px;
+        left: 200px;
+        width: 220px;
+        max-height: 360px;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        z-index: 2000;
+        display: none;
+        flex-direction: column;
+        padding: 8px 0;
+    }
+    .history-panel.visible { display: flex; }
+    .history-panel-header {
+        font-size: 12px;
+        font-weight: 700;
+        color: #4a5568;
+        padding: 4px 12px 8px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .history-item {
+        padding: 6px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        color: #4a5568;
+        transition: all 0.15s;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .history-item:hover { background: #f7fafc; }
+    .history-item.current { border-left-color: #3182ce; background: #ebf8ff; color: #2b6cb0; font-weight: 600; }
+    .history-item.future { opacity: 0.45; }
+
+    /* === PANEL ATAJOS === */
+    .shortcuts-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 10002;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    .shortcuts-overlay.visible { display: flex; }
+    .shortcuts-panel {
+        background: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        max-width: 640px;
+        width: 90vw;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .shortcuts-panel h3 { font-size: 18px; margin-bottom: 16px; color: #1a202c; }
+    .shortcuts-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+    .shortcuts-section h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #3182ce; margin: 12px 0 6px; font-weight: 700; }
+    .shortcut-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+    .shortcut-row span { color: #4a5568; }
+    .shortcut-row kbd {
+        background: #f7fafc; border: 1px solid #cbd5e0;
+        border-radius: 4px; padding: 2px 7px; font-size: 11px;
+        font-family: monospace; color: #2d3748; white-space: nowrap;
+    }
+
+    /* === TEMPORIZADOR EN PRESENTACIÓN === */
+    .pres-timer {
+        position: fixed; top: 20px; left: 20px;
+        background: rgba(0,0,0,0.55);
+        color: #fff; font-size: 22px; font-weight: 700;
+        padding: 8px 18px; border-radius: 8px;
+        z-index: 10001; font-variant-numeric: tabular-nums;
+        letter-spacing: 0.05em;
+    }
+    .pres-timer.warning { background: rgba(220,38,38,0.8); }
+
+    /* === AJUSTE GRID BODY PARA NOTAS === */
+    body.notes-open {
+        grid-template-rows: auto 1fr auto;
+    }
+
+    /* === AUTOSAVE === */
+    .autosave-indicator { font-size:11px; color:#68d391; display:flex; align-items:center; gap:4px; white-space:nowrap; flex-shrink:0; }
+    .autosave-indicator.saving { color:#f6ad55; }
 
     /* Media Queries para mejor responsividad */
     @media (max-width: 1024px) {
@@ -666,63 +970,149 @@
     </div>
 
     <div class="top-toolbar">
-        <div class="toolbar-group">
-            <button onclick="undo()" title="Deshacer"><i class="fas fa-undo"></i></button>
-            <button onclick="redo()" title="Rehacer"><i class="fas fa-redo"></i></button>
-        </div>
-        <div class="toolbar-group">
-            <input type="text" class="image-url-input" placeholder="URL de imagen">
-            <button class="add-image-btn" onclick="addImageToCurrentSlide()" title="Agregar Imagen">
-                <i class="fas fa-image"></i>
-            </button>
-        </div>
-        <div class="toolbar-group">
-            <button onclick="addTextBox()" title="Agregar Texto"><i class="fas fa-font"></i></button>
-            <div class="shapes-menu">
-                <button onclick="toggleShapesMenu()" title="Agregar Forma"><i class="fas fa-shapes"></i></button>
-                <div id="shapesDropdown" style="display: none;">
-                    <button onclick="addShape('rectangle')" title="Rectángulo"><i class="fas fa-square"></i></button>
-                    <button onclick="addShape('circle')" title="Círculo"><i class="fas fa-circle"></i></button>
-                    <button onclick="addShape('triangle')" title="Triángulo"><i class="fas fa-play"></i></button>
-                    <button onclick="addShape('star')" title="Estrella"><i class="fas fa-star"></i></button>
+
+        <!-- FILA 1: acciones principales -->
+        <div class="toolbar-row">
+            <!-- Nombre de presentación -->
+            <div class="toolbar-group">
+                <input type="text" class="pres-name-input" id="presName" value="Mi presentación" title="Nombre de la presentación" onchange="PresNameManager.save(this.value)">
+            </div>
+            <!-- Historial -->
+            <div class="toolbar-group">
+                <div class="undo-redo-wrap">
+                    <button onclick="undo()" title="Deshacer (Ctrl+Z)"><i class="fas fa-undo"></i></button>
+                    <span class="history-badge" id="undoBadge" style="display:none"></span>
+                </div>
+                <div class="undo-redo-wrap">
+                    <button onclick="redo()" title="Rehacer (Ctrl+Y)"><i class="fas fa-redo"></i></button>
+                    <span class="history-badge" id="redoBadge" style="display:none"></span>
+                </div>
+                <button onclick="HistoryPanelManager.toggle()" title="Ver historial de cambios" id="historyPanelBtn"><i class="fas fa-history"></i></button>
+            </div>
+            <!-- Zoom -->
+            <div class="toolbar-group zoom-controls">
+                <button onclick="ZoomManager.decrease()" title="Alejar (Ctrl+-)"><i class="fas fa-search-minus"></i></button>
+                <span id="zoomLabel">100%</span>
+                <button onclick="ZoomManager.increase()" title="Acercar (Ctrl+=)"><i class="fas fa-search-plus"></i></button>
+            </div>
+            <!-- Fondo -->
+            <div class="toolbar-group">
+                <div class="bg-menu">
+                    <button onclick="toggleBgMenu(this)" title="Fondo de diapositiva"><i class="fas fa-fill-drip"></i> <span style="font-size:11px;margin-left:2px">Fondo</span></button>
+                    <div id="bgDropdown" class="bg-dropdown">
+                        <div>
+                            <label>Tipo de fondo</label>
+                            <select id="bgType" onchange="BgManager.onTypeChange(this.value)">
+                                <option value="solid">Color sólido</option>
+                                <option value="gradient">Degradado</option>
+                                <option value="image">Imagen (URL)</option>
+                            </select>
+                        </div>
+                        <div id="bgSolidRow">
+                            <label>Color</label>
+                            <input type="color" id="bgSolidColor" value="#ffffff" oninput="BgManager.apply()">
+                        </div>
+                        <div id="bgGradientRow" style="display:none">
+                            <label>Color A → Color B</label>
+                            <div class="bg-gradient-row">
+                                <input type="color" id="bgGradA" value="#667eea" oninput="BgManager.apply()">
+                                <input type="color" id="bgGradB" value="#764ba2" oninput="BgManager.apply()">
+                            </div>
+                        </div>
+                        <div id="bgImageRow" style="display:none">
+                            <label>URL de imagen</label>
+                            <input type="text" id="bgImageUrl" placeholder="https://..." style="width:100%;padding:5px;border:1px solid #cbd5e0;border-radius:4px;font-size:12px" oninput="BgManager.apply()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Insertar elementos -->
+            <div class="toolbar-group">
+                <button onclick="addTextBox()" title="Agregar Texto (Ctrl+T)"><i class="fas fa-font"></i></button>
+                <div class="shapes-menu">
+                    <button onclick="toggleShapesMenu()" title="Formas"><i class="fas fa-shapes"></i></button>
+                    <div id="shapesDropdown" style="display:none;" class="shapes-dropdown">
+                        <button onclick="addShape('rectangle')"><i class="fas fa-square"></i> Rectángulo</button>
+                        <button onclick="addShape('circle')"><i class="fas fa-circle"></i> Círculo</button>
+                        <button onclick="addShape('triangle')"><i class="fas fa-play"></i> Triángulo</button>
+                        <button onclick="addShape('star')"><i class="fas fa-star"></i> Estrella</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Imagen -->
+            <div class="toolbar-group">
+                <input type="text" class="image-url-input" placeholder="URL de imagen…">
+                <button onclick="addImageToCurrentSlide()" title="Agregar imagen"><i class="fas fa-image"></i></button>
+            </div>
+            <!-- Presentación -->
+            <div class="toolbar-group">
+                <select class="transition-select" id="transitionSelect" title="Transición">
+                    <option value="none">Sin transición</option>
+                    <option value="fade">Fundido</option>
+                    <option value="slide-left">Deslizar →</option>
+                    <option value="slide-right">Deslizar ←</option>
+                    <option value="zoom">Zoom</option>
+                </select>
+                <button onclick="startPresentation()" title="Presentar (F5)" style="background:#3182ce;color:#fff;border-color:#2b6cb0;width:auto;padding:0 10px;gap:4px">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+            <!-- IO + utilidades -->
+            <div class="toolbar-group">
+                <button onclick="exportPresentation()" title="Exportar JSON"><i class="fas fa-download"></i></button>
+                <input type="file" id="importPresentation" accept=".json" onchange="importPresentation(event)">
+                <button onclick="document.getElementById('importPresentation').click()" title="Importar JSON"><i class="fas fa-upload"></i></button>
+            </div>
+            <div class="toolbar-group">
+                <button onclick="GridManager.toggle()" id="gridBtn" title="Mostrar/ocultar grilla"><i class="fas fa-th"></i></button>
+                <button onclick="NotesManager.toggle()" id="notesBtn" title="Notas del presentador"><i class="fas fa-sticky-note"></i></button>
+                <button onclick="DarkMode.toggle()" id="darkBtn" title="Modo oscuro"><i class="fas fa-moon"></i></button>
+                <button onclick="ShortcutsPanel.show()" title="Atajos de teclado (?)"><i class="fas fa-keyboard"></i></button>
+            </div>
+            <div class="toolbar-group" style="border-right:none">
+                <div class="autosave-indicator" id="autosaveIndicator">
+                    <i class="fas fa-cloud"></i><span>Guardado</span>
                 </div>
             </div>
         </div>
-        <div class="toolbar-group">
-            <button onclick="startPresentation()" title="Iniciar presentación"><i class="fas fa-play"></i></button>
+
+        <!-- FILA 2: formato de texto -->
+        <div class="toolbar-row">
+            <div class="toolbar-group">
+                <button onmousedown="event.preventDefault()" onclick="formatText('bold')" title="Negrita"><i class="fas fa-bold"></i></button>
+                <button onmousedown="event.preventDefault()" onclick="formatText('italic')" title="Cursiva"><i class="fas fa-italic"></i></button>
+                <button onmousedown="event.preventDefault()" onclick="formatText('underline')" title="Subrayado"><i class="fas fa-underline"></i></button>
+            </div>
+            <div class="toolbar-group">
+                <input type="color" id="textColorPicker" onmousedown="event.stopPropagation()" onchange="changeTextColor(this.value)" title="Color de texto">
+            </div>
+            <div class="toolbar-group">
+                <select id="fontFamilySelector" onmousedown="event.stopPropagation()" onchange="changeFontFamily(this.value)" title="Fuente" style="width:130px">
+                    <option value="arial">Arial</option>
+                    <option value="times-new-roman">Times New Roman</option>
+                    <option value="courier-new">Courier New</option>
+                    <option value="georgia">Georgia</option>
+                    <option value="verdana">Verdana</option>
+                </select>
+            </div>
+            <div class="toolbar-group">
+                <select id="fontSizeSelector" onmousedown="event.stopPropagation()" onchange="changeFontSize(this.value)" title="Tamaño">
+                    <option value="12px">12px</option>
+                    <option value="14px">14px</option>
+                    <option value="16px">16px</option>
+                    <option value="18px">18px</option>
+                    <option value="24px">24px</option>
+                    <option value="32px">32px</option>
+                    <option value="48px">48px</option>
+                </select>
+            </div>
+            <div class="toolbar-group" style="border-right:none">
+                <button onmousedown="event.preventDefault()" onclick="formatText('align', 'left')" title="Izquierda"><i class="fas fa-align-left"></i></button>
+                <button onmousedown="event.preventDefault()" onclick="formatText('align', 'center')" title="Centrar"><i class="fas fa-align-center"></i></button>
+                <button onmousedown="event.preventDefault()" onclick="formatText('align', 'right')" title="Derecha"><i class="fas fa-align-right"></i></button>
+            </div>
         </div>
-        <div class="toolbar-group">
-            <button onclick="exportPresentation()" title="Exportar"><i class="fas fa-download"></i></button>
-            <input type="file" id="importPresentation" accept=".json" onchange="importPresentation(event)">
-            <button onclick="document.getElementById('importPresentation').click()" title="Importar">
-                <i class="fas fa-upload"></i>
-            </button>
-        </div>
-        <div class="format-toolbar toolbar-group">
-            <button onclick="formatText('bold')" title="Negrita"><i class="fas fa-bold"></i></button>
-            <button onclick="formatText('italic')" title="Cursiva"><i class="fas fa-italic"></i></button>
-            <button onclick="formatText('underline')" title="Subrayado"><i class="fas fa-underline"></i></button>
-            <input type="color" id="textColorPicker" onchange="changeTextColor(this.value)" title="Color de texto">
-            <select id="fontFamilySelector" onchange="changeFontFamily(this.value)" title="Tipo de letra">
-                <option value="arial">Arial</option>
-                <option value="times-new-roman">Times New Roman</option>
-                <option value="courier-new">Courier New</option>
-                <option value="georgia">Georgia</option>
-                <option value="verdana">Verdana</option>
-            </select>
-            <select id="fontSizeSelector" onchange="changeFontSize(this.value)" title="Tamaño de fuente">
-                <option value="12px">12px</option>
-                <option value="14px">14px</option>
-                <option value="16px">16px</option>
-                <option value="18px">18px</option>
-                <option value="24px">24px</option>
-                <option value="32px">32px</option>
-                <option value="48px">48px</option>
-            </select>
-            <button onclick="formatText('align', 'left')" title="Alinear izquierda"><i class="fas fa-align-left"></i></button>
-            <button onclick="formatText('align', 'center')" title="Centrar"><i class="fas fa-align-center"></i></button>
-            <button onclick="formatText('align', 'right')" title="Alinear derecha"><i class="fas fa-align-right"></i></button>
-        </div>
+
     </div>
 
     <div class="main-content">
@@ -754,6 +1144,53 @@
                 <button onclick="rotateLeft()" title="Rotar izquierda"><i class="fas fa-undo"></i></button>
                 <input type="number" id="rotationInput" value="0" onchange="setElementRotation(this.value)">
                 <button onclick="rotateRight()" title="Rotar derecha"><i class="fas fa-redo"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de notas del presentador -->
+    <div class="notes-panel" id="notesPanel">
+        <label><i class="fas fa-sticky-note"></i> Notas del presentador — Diapositiva <span id="notesSlideNum">1</span></label>
+        <textarea class="notes-area" id="notesArea" placeholder="Escribe tus notas aquí (solo visibles en el editor)…" oninput="NotesManager.save(this.value)"></textarea>
+    </div>
+
+    <!-- Panel historial -->
+    <div class="history-panel" id="historyPanel">
+        <div class="history-panel-header"><i class="fas fa-history"></i> Historial de cambios</div>
+        <div id="historyList"></div>
+    </div>
+
+    <!-- Overlay de atajos -->
+    <div class="shortcuts-overlay" id="shortcutsOverlay" onclick="if(event.target===this)ShortcutsPanel.hide()">
+        <div class="shortcuts-panel">
+            <h3><i class="fas fa-keyboard" style="color:#3182ce;margin-right:8px"></i>Atajos de teclado</h3>
+            <div class="shortcuts-columns">
+                <div class="shortcuts-section">
+                    <h4>Edición</h4>
+                    <div class="shortcut-row"><span>Deshacer</span><kbd>Ctrl+Z</kbd></div>
+                    <div class="shortcut-row"><span>Rehacer</span><kbd>Ctrl+Y</kbd></div>
+                    <div class="shortcut-row"><span>Eliminar elemento</span><kbd>Supr</kbd></div>
+                    <div class="shortcut-row"><span>Nuevo texto</span><kbd>Ctrl+T</kbd></div>
+                    <div class="shortcut-row"><span>Nueva diapositiva</span><kbd>Ctrl+N</kbd></div>
+                    <h4>Texto</h4>
+                    <div class="shortcut-row"><span>Negrita</span><kbd>Ctrl+B</kbd></div>
+                    <div class="shortcut-row"><span>Cursiva</span><kbd>Ctrl+I</kbd></div>
+                    <div class="shortcut-row"><span>Subrayado</span><kbd>Ctrl+U</kbd></div>
+                </div>
+                <div class="shortcuts-section">
+                    <h4>Presentación</h4>
+                    <div class="shortcut-row"><span>Iniciar presentación</span><kbd>F5</kbd></div>
+                    <div class="shortcut-row"><span>Siguiente diapositiva</span><kbd>→ / Espacio</kbd></div>
+                    <div class="shortcut-row"><span>Diapositiva anterior</span><kbd>←</kbd></div>
+                    <div class="shortcut-row"><span>Salir de presentación</span><kbd>Esc</kbd></div>
+                    <h4>Vista</h4>
+                    <div class="shortcut-row"><span>Acercar</span><kbd>Ctrl+=</kbd></div>
+                    <div class="shortcut-row"><span>Alejar</span><kbd>Ctrl+-</kbd></div>
+                    <div class="shortcut-row"><span>Este panel</span><kbd>?</kbd></div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:16px">
+                <button onclick="ShortcutsPanel.hide()" style="background:#3182ce;color:#fff;border:none;border-radius:6px;padding:8px 24px;cursor:pointer;font-size:14px">Cerrar</button>
             </div>
         </div>
     </div>
@@ -814,6 +1251,7 @@
             isDragging: false,
             offsetX: 0,
             offsetY: 0,
+            _slideRect: null,
             quillInstances: new Map(),
             history: [],
             historyIndex: -1,
@@ -837,7 +1275,24 @@
         const ErrorHandler = {
             handle(message, error) {
                 console.error(`[Xaripod Error] ${message}:`, error);
-                alert(`Error: ${message}`);
+                ErrorHandler.showToast(`Error: ${message}`, 'error');
+            },
+            showToast(message, type = 'info') {
+                const existing = document.getElementById('xaripod-toast');
+                if (existing) existing.remove();
+                const toast = document.createElement('div');
+                toast.id = 'xaripod-toast';
+                toast.style.cssText = `
+                    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+                    background: ${type === 'error' ? '#e53e3e' : '#2b6cb0'};
+                    color: white; padding: 10px 20px; border-radius: 6px; font-size: 14px;
+                    z-index: 99999; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    max-width: 90vw; text-align: center; pointer-events: none;
+                    animation: fadeInUp 0.2s ease;
+                `;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3500);
             }
         };
 
@@ -878,23 +1333,26 @@
                     render(elementData, index, slideElement) {
                         const domElement = document.createElement('div');
                         domElement.className = 'draggable text-editor';
-                        domElement.id = `text-editor-${index}-${appState.currentSlideIndex}`;
-                        domElement.style.minWidth = `${elementData.width}px`;
-                        domElement.style.minHeight = `${elementData.height}px`;
+                        const quillKey = `${appState.slides[appState.currentSlideIndex].id}-${index}`;
+                        domElement.id = `text-editor-${quillKey}`;
+                        // Solo fijar el ancho — la altura crece con el contenido (no fijar height)
+                        domElement.style.width    = `${elementData.width || CONFIG.DEFAULT_TEXT.width}px`;
+                        domElement.style.minHeight = `${elementData.height || CONFIG.DEFAULT_TEXT.height}px`;
                         slideElement.appendChild(domElement);
                         try {
-                            appState.quillInstances.delete(index);
+                            appState.quillInstances.delete(quillKey);
                             const quill = new Quill(domElement, {
                                 theme: 'snow',
                                 modules: { toolbar: false }
                             });
                             quill.root.innerHTML = elementData.content || CONFIG.DEFAULT_TEXT.content;
+                            quill.root.style.width = `${(elementData.width || CONFIG.DEFAULT_TEXT.width) - 16}px`;
                             quill.on('text-change', () => {
                                 elementData.content = quill.root.innerHTML;
                                 HistoryManager.save();
                                 SlideManager.updateThumbnail(appState.currentSlideIndex);
                             });
-                            appState.quillInstances.set(index, quill);
+                            appState.quillInstances.set(quillKey, quill);
                         } catch (e) {
                             ErrorHandler.handle('Error al inicializar Quill para texto', e);
                         }
@@ -938,26 +1396,74 @@
                 }
             },
             setupListeners(domElement, index) {
-                // Eventos de ratón
-                domElement.addEventListener('mousedown', (e) => {
-                    e.stopPropagation();
-                    ElementManager.select(domElement, index);
-                    InteractionManager.handleDragStart(e, domElement, index);
+                const isText = domElement.classList.contains('text-editor');
+
+                // ── Drag handle (solo cuadros de texto) ──────────────────────
+                if (isText) {
+                    const handle = document.createElement('div');
+                    handle.className = 'drag-handle';
+                    handle.title = 'Arrastrar';
+                    handle.innerHTML = '<span></span>';
+                    domElement.appendChild(handle);
+
+                    handle.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        ElementManager.select(domElement, index);
+                        InteractionManager.handleDragStart(e, domElement, index);
+                    });
+                    handle.addEventListener('touchstart', (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        ElementManager.select(domElement, index);
+                        InteractionManager.handleDragStart({ clientX: touch.clientX, clientY: touch.clientY }, domElement, index);
+                    }, { passive: false });
+                }
+
+                // ── Resize handles (8 puntos) ────────────────────────────────
+                const directions = ['nw','n','ne','e','se','s','sw','w'];
+                directions.forEach(dir => {
+                    const rh = document.createElement('div');
+                    rh.className = `resize-handle ${dir}`;
+                    domElement.appendChild(rh);
+                    rh.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        ElementManager.select(domElement, index);
+                        ResizeManager.start(e, domElement, index, dir);
+                    });
+                    rh.addEventListener('touchstart', (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        ElementManager.select(domElement, index);
+                        ResizeManager.start({ clientX: touch.clientX, clientY: touch.clientY }, domElement, index, dir);
+                    }, { passive: false });
                 });
-                
-                // Eventos táctiles
-                domElement.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
+
+                // ── Click / mousedown en el propio elemento ──────────────────
+                domElement.addEventListener('mousedown', (e) => {
+                    // Si es texto y ya está seleccionado → dejar que Quill maneje
+                    if (isText && appState.selectedElement === domElement) return;
                     e.stopPropagation();
-                    const touch = e.touches[0];
-                    const touchEvent = {
-                        clientX: touch.clientX,
-                        clientY: touch.clientY,
-                        target: e.target
-                    };
                     ElementManager.select(domElement, index);
-                    InteractionManager.handleDragStart(touchEvent, domElement, index);
-                }, { passive: false });
+                    // Para no-texto (imagen, forma) iniciamos drag directamente
+                    if (!isText) {
+                        InteractionManager.handleDragStart(e, domElement, index);
+                    }
+                });
+
+                // Touch para no-texto
+                if (!isText) {
+                    domElement.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const touch = e.touches[0];
+                        ElementManager.select(domElement, index);
+                        InteractionManager.handleDragStart({ clientX: touch.clientX, clientY: touch.clientY }, domElement, index);
+                    }, { passive: false });
+                }
             },
             select(domElement, index) {
                 if (appState.selectedElement === domElement) return;
@@ -968,7 +1474,8 @@
                 DOM.elementPanel.style.display = 'block';
                 ElementManager.updatePanel();
                 if (domElement.classList.contains('text-editor')) {
-                    const quill = appState.quillInstances.get(index);
+                    const quillKey = `${appState.slides[appState.currentSlideIndex].id}-${index}`;
+                    const quill = appState.quillInstances.get(quillKey);
                     if (quill) quill.focus();
                 }
             },
@@ -984,13 +1491,25 @@
                 try {
                     if (index < 0 || index >= appState.slides[appState.currentSlideIndex].elements.length) return;
                     HistoryManager.save();
+                    const slideId = appState.slides[appState.currentSlideIndex].id;
                     appState.slides[appState.currentSlideIndex].elements.splice(index, 1);
-                    appState.quillInstances.delete(index);
+                    // Eliminar instancia Quill con clave compuesta
+                    appState.quillInstances.delete(`${slideId}-${index}`);
+                    // Reasignar claves de índices superiores
                     const newInstances = new Map();
                     appState.quillInstances.forEach((value, key) => {
-                        if (key > index) {
-                            newInstances.set(key - 1, value);
-                        } else if (key < index) {
+                        const [kSlide, kIdx] = key.split('-quill-idx-');
+                        // Manejo genérico: comparar por slideId y número de índice
+                        const parts = key.split('-');
+                        const kIndex = parseInt(parts[parts.length - 1]);
+                        const kSlideId = parts.slice(0, parts.length - 1).join('-');
+                        if (kSlideId === slideId) {
+                            if (kIndex > index) {
+                                newInstances.set(`${slideId}-${kIndex - 1}`, value);
+                            } else if (kIndex < index) {
+                                newInstances.set(key, value);
+                            }
+                        } else {
                             newInstances.set(key, value);
                         }
                     });
@@ -1011,6 +1530,22 @@
                     ElementManager.delete(appState.selectedElementIndex);
                 }
             },
+            // Convierte cualquier valor CSS de color a formato #rrggbb para input[type=color]
+            toHex(color) {
+                try {
+                    const ctx = document.createElement('canvas').getContext('2d');
+                    ctx.fillStyle = color;
+                    const computed = ctx.fillStyle; // siempre devuelve hex o rgb(...)
+                    if (computed.startsWith('#')) return computed;
+                    const m = computed.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                    if (m) {
+                        return '#' + [m[1], m[2], m[3]].map(n => parseInt(n).toString(16).padStart(2, '0')).join('');
+                    }
+                    return '#3182ce'; // fallback al color default
+                } catch (e) {
+                    return '#3182ce';
+                }
+            },
             updatePanel() {
                 if (!appState.selectedElement) return;
                 const elementData = appState.slides[appState.currentSlideIndex].elements[appState.selectedElementIndex];
@@ -1019,7 +1554,10 @@
                 const shapeColorGroup = document.getElementById('shapeColorGroup');
                 if (elementData.type === 'shape') {
                     shapeColorGroup.style.display = 'block';
-                    document.getElementById('shapeColorPicker').value = elementData.color || CONFIG.DEFAULT_SHAPE.color;
+                    // Normalizar color a hex para que el input[type=color] lo muestre correctamente
+                    const rawColor = elementData.color || CONFIG.DEFAULT_SHAPE.color;
+                    const hexColor = ElementManager.toHex(rawColor);
+                    document.getElementById('shapeColorPicker').value = hexColor;
                 } else {
                     shapeColorGroup.style.display = 'none';
                 }
@@ -1061,13 +1599,14 @@
                     <p>Diapositiva ${slideIndex + 1}</p>
                 `;
                 thumbnail.addEventListener('click', () => SlideManager.goTo(slideIndex));
+                ThumbDragManager.setupThumb(thumbnail, slideIndex);
                 DOM.sidebar.appendChild(thumbnail);
                 SlideManager.updateThumbnail(slideIndex);
             },
             delete(slideIndex) {
                 try {
                     if (appState.slides.length <= 1) {
-                        alert('Debe haber al menos una diapositiva.');
+                        ErrorHandler.showToast('Debe haber al menos una diapositiva.', 'info');
                         return;
                     }
                     if (!confirm(`¿Eliminar Diapositiva ${slideIndex + 1}?`)) return;
@@ -1141,6 +1680,12 @@
                     thumbnails.forEach((thumb, index) => {
                         thumb.classList.toggle('active', index === slideIndex);
                     });
+                    // Sincronizar UI de fondo con la diapositiva activa
+                    if (document.getElementById('bgDropdown').style.display === 'flex') {
+                        BgManager.syncUI(slideIndex);
+                    }
+                    // Cargar notas de la diapositiva
+                    if (NotesManager.visible) NotesManager.load(slideIndex);
                 } catch (e) {
                     ErrorHandler.handle('Error al cambiar diapositiva', e);
                 }
@@ -1159,7 +1704,11 @@
                         const renderer = ElementManager.types[elementData.type]?.render;
                         if (!renderer) return;
                         let domElement = renderer(elementData, index, slideElement);
-                        domElement.className = domElement.className.includes('text-editor') ? 'draggable text-editor' : 'draggable';
+                        // Preservar clases ya asignadas por el renderer (ej: 'draggable shape')
+                        // solo añadir 'draggable' si aún no la tiene
+                        if (!domElement.classList.contains('draggable')) {
+                            domElement.classList.add('draggable');
+                        }
                         domElement.style.position = 'absolute';
                         domElement.style.left = `${elementData.x}px`;
                         domElement.style.top = `${elementData.y}px`;
@@ -1193,6 +1742,8 @@
                         ElementManager.deselect();
                     }
                     SlideManager.updateThumbnail(appState.currentSlideIndex);
+                    // Aplicar fondo de diapositiva
+                    BgManager.renderBg(appState.currentSlideIndex);
                 } catch (e) {
                     ErrorHandler.handle('Error al renderizar diapositiva', e);
                 }
@@ -1235,7 +1786,7 @@
                         <div class="sidebar-header">
                             <i class="fa fa-cog fa-spin fa-3x fa-fw"></i> Diapositivas
                         </div>
-                        <button class="add-slide-btn" onclick="SlideManager.add()">
+                        <button class="add-slide-btn" onclick="addNewSlide()">
                             <i class="fas fa-plus"></i> Nueva Diapositiva
                         </button>
                     `;
@@ -1253,31 +1804,135 @@
             thumbnailTimeouts: new Map()
         };
 
+        // --- Gestor de Redimensionamiento ---
+        const ResizeManager = {
+            active: false,
+            dir: null,
+            startX: 0, startY: 0,
+            startW: 0, startH: 0,
+            startLeft: 0, startTop: 0,
+            element: null,
+            elementIndex: null,
+
+            start(e, domElement, index, dir) {
+                ResizeManager.active = true;
+                ResizeManager.dir = dir;
+                ResizeManager.element = domElement;
+                ResizeManager.elementIndex = index;
+                ResizeManager.startX = e.clientX;
+                ResizeManager.startY = e.clientY;
+                ResizeManager.startW = domElement.offsetWidth;
+                ResizeManager.startH = domElement.offsetHeight;
+                ResizeManager.startLeft = parseInt(domElement.style.left) || 0;
+                ResizeManager.startTop  = parseInt(domElement.style.top)  || 0;
+
+                document.addEventListener('mousemove', ResizeManager.onMove);
+                document.addEventListener('mouseup',   ResizeManager.onEnd);
+                document.addEventListener('touchmove', ResizeManager.onTouchMove, { passive: false });
+                document.addEventListener('touchend',  ResizeManager.onEnd);
+            },
+
+            onMove(e) {
+                if (!ResizeManager.active) return;
+                const dx = e.clientX - ResizeManager.startX;
+                const dy = e.clientY - ResizeManager.startY;
+                ResizeManager.apply(dx, dy);
+            },
+
+            onTouchMove(e) {
+                if (!ResizeManager.active) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                const dx = touch.clientX - ResizeManager.startX;
+                const dy = touch.clientY - ResizeManager.startY;
+                ResizeManager.apply(dx, dy);
+            },
+
+            apply(dx, dy) {
+                const { dir, element, startW, startH, startLeft, startTop } = ResizeManager;
+                const MIN = 60;
+                let newW = startW, newH = startH, newL = startLeft, newT = startTop;
+                const isText = element.classList.contains('text-editor');
+
+                if (dir.includes('e'))  newW = Math.max(MIN, startW + dx);
+                if (dir.includes('s'))  newH = Math.max(MIN, startH + dy);
+                if (dir.includes('w')) { newW = Math.max(MIN, startW - dx); newL = startLeft + (startW - newW); }
+                if (dir.includes('n')) { newH = Math.max(MIN, startH - dy); newT = startTop  + (startH - newH); }
+
+                element.style.width = `${newW}px`;
+                element.style.left  = `${newL}px`;
+                element.style.top   = `${newT}px`;
+                // Para texto: usar minHeight para que el contenido pueda seguir creciendo
+                if (isText) {
+                    element.style.minHeight = `${newH}px`;
+                    element.style.height = '';
+                } else {
+                    element.style.height = `${newH}px`;
+                }
+
+                // Actualizar datos
+                const elementData = appState.slides[appState.currentSlideIndex].elements[ResizeManager.elementIndex];
+                elementData.width  = newW;
+                elementData.height = newH;
+                elementData.x = newL;
+                elementData.y = newT;
+
+                // Sincronizar ancho de Quill si es texto
+                const quillKey = `${appState.slides[appState.currentSlideIndex].id}-${ResizeManager.elementIndex}`;
+                const quill = appState.quillInstances.get(quillKey);
+                if (quill) {
+                    quill.root.style.width = `${newW - 16}px`;
+                }
+
+                SlideManager.updateThumbnail(appState.currentSlideIndex);
+            },
+
+            onEnd() {
+                if (!ResizeManager.active) return;
+                ResizeManager.active = false;
+                document.removeEventListener('mousemove', ResizeManager.onMove);
+                document.removeEventListener('mouseup',   ResizeManager.onEnd);
+                document.removeEventListener('touchmove', ResizeManager.onTouchMove);
+                document.removeEventListener('touchend',  ResizeManager.onEnd);
+                HistoryManager.save();
+            }
+        };
+
         // --- Gestor de Interacciones ---
         const InteractionManager = {
             handleDragStart(event, element, elementIndex) {
                 appState.isDragging = true;
-                const rect = element.getBoundingClientRect();
-                const slideRect = DOM.slideContainer.getBoundingClientRect();
-                appState.offsetX = event.clientX - rect.left;
-                appState.offsetY = event.clientY - rect.top;
+
+                // Obtener el rect del slide activo — es el origen de coordenadas CSS
+                const activeSlide = document.getElementById(appState.slides[appState.currentSlideIndex].id);
+                const slideRect = (activeSlide || DOM.slideContainer).getBoundingClientRect();
+                appState._slideRect = slideRect;
+
+                // Calcular offset usando la posición lógica del elemento (en datos),
+                // no el getBoundingClientRect que incluye transform/scale y puede desfasarse.
+                const elementData = appState.slides[appState.currentSlideIndex].elements[elementIndex];
+                const logicalX = elementData.x || 0;
+                const logicalY = elementData.y || 0;
+
+                // offsetX/Y = distancia entre donde hiciste click y la esquina superior izquierda lógica
+                appState.offsetX = event.clientX - (slideRect.left + logicalX);
+                appState.offsetY = event.clientY - (slideRect.top  + logicalY);
+
                 element.style.cursor = 'grabbing';
-                
-                // Eventos de ratón
+
                 document.addEventListener('mousemove', InteractionManager.handleDragMove);
-                document.addEventListener('mouseup', InteractionManager.handleDragEnd);
-                
-                // Eventos táctiles
+                document.addEventListener('mouseup',   InteractionManager.handleDragEnd);
                 document.addEventListener('touchmove', InteractionManager.handleTouchMove, { passive: false });
-                document.addEventListener('touchend', InteractionManager.handleDragEnd);
+                document.addEventListener('touchend',  InteractionManager.handleDragEnd);
             },
             handleDragMove(event) {
                 if (!appState.isDragging || !appState.selectedElement) return;
-                const slideRect = DOM.slideContainer.getBoundingClientRect();
+                const activeSlide = document.getElementById(appState.slides[appState.currentSlideIndex].id);
+                const slideRect = (activeSlide || DOM.slideContainer).getBoundingClientRect();
                 const element = appState.selectedElement;
                 let newX = event.clientX - slideRect.left - appState.offsetX;
-                let newY = event.clientY - slideRect.top - appState.offsetY;
-                InteractionManager.updateElementPosition(element, newX, newY);
+                let newY = event.clientY - slideRect.top  - appState.offsetY;
+                InteractionManager.updateElementPosition(element, newX, newY, slideRect);
             },
             handleTouchMove(event) {
                 if (!appState.isDragging || !appState.selectedElement) {
@@ -1285,26 +1940,35 @@
                     return;
                 }
                 const touch = event.touches[0];
-                const slideRect = DOM.slideContainer.getBoundingClientRect();
+                const activeSlide = document.getElementById(appState.slides[appState.currentSlideIndex].id);
+                const slideRect = (activeSlide || DOM.slideContainer).getBoundingClientRect();
                 const element = appState.selectedElement;
                 let newX = touch.clientX - slideRect.left - appState.offsetX;
-                let newY = touch.clientY - slideRect.top - appState.offsetY;
-                InteractionManager.updateElementPosition(element, newX, newY);
+                let newY = touch.clientY - slideRect.top  - appState.offsetY;
+                InteractionManager.updateElementPosition(element, newX, newY, slideRect);
                 event.preventDefault();
             },
-            updateElementPosition(element, newX, newY) {
+            updateElementPosition(element, newX, newY, slideRect) {
+                // Usar el slideRect pasado o recalcular
+                const sr = slideRect || (appState._slideRect) || DOM.slideContainer.getBoundingClientRect();
+                const elW = element.offsetWidth  || 50;
+                const elH = element.offsetHeight || 20;
+                newX = Math.max(0, Math.min(newX, sr.width  - elW));
+                newY = Math.max(0, Math.min(newY, sr.height - elH));
                 element.style.left = `${newX}px`;
-                element.style.top = `${newY}px`;
+                element.style.top  = `${newY}px`;
                 const elementIndex = parseInt(element.dataset.index);
                 const elementData = appState.slides[appState.currentSlideIndex].elements[elementIndex];
                 elementData.x = newX;
                 elementData.y = newY;
                 SlideManager.updateThumbnail(appState.currentSlideIndex);
             },
-            handleDragEnd() {
-                if (!appState.isDragging || !appState.selectedElement) return;
+            handleDragEnd(event) {
+                if (!appState.isDragging) return;
                 appState.isDragging = false;
-                appState.selectedElement.style.cursor = 'move';
+                if (appState.selectedElement) {
+                    appState.selectedElement.style.cursor = 'move';
+                }
                 
                 // Eliminar eventos de ratón
                 document.removeEventListener('mousemove', InteractionManager.handleDragMove);
@@ -1320,13 +1984,21 @@
 
         // --- Gestor de Historial ---
         const HistoryManager = {
+            MAX_HISTORY: 50,
             save() {
                 const currentState = JSON.stringify(appState.slides);
                 if (appState.history[appState.historyIndex] !== currentState) {
                     appState.history = appState.history.slice(0, appState.historyIndex + 1);
                     appState.history.push(currentState);
                     appState.historyIndex++;
+                    if (appState.history.length > HistoryManager.MAX_HISTORY) {
+                        appState.history.shift();
+                        appState.historyIndex = appState.history.length - 1;
+                    }
                 }
+                updateHistoryBadges();
+                LocalStorageManager.save();
+                if (HistoryPanelManager.visible) HistoryPanelManager.render();
             },
             undo() {
                 try {
@@ -1375,6 +2047,7 @@
                     });
                     
                     DOM.loader.style.display = 'none';
+                    updateHistoryBadges();
                 } catch (e) {
                     DOM.loader.style.display = 'none';
                     ErrorHandler.handle('Error al deshacer', e);
@@ -1417,16 +2090,15 @@
                             SlideManager.updateThumbnail(appState.currentSlideIndex);
                         }
                     } else if (appState.slides.length > 0) {
-                        // Si el índice actual no es válido, ir a la primera diapositiva
                         SlideManager.goTo(0);
                     }
                     
-                    // Forzar actualización de todas las miniaturas
                     appState.slides.forEach((_, index) => {
                         SlideManager.updateThumbnail(index);
                     });
                     
                     DOM.loader.style.display = 'none';
+                    updateHistoryBadges();
                 } catch (e) {
                     DOM.loader.style.display = 'none';
                     ErrorHandler.handle('Error al rehacer', e);
@@ -1436,97 +2108,77 @@
 
         // --- Gestor de Formato de Texto ---
         const TextFormatter = {
+            // Helper: obtiene quill y selección del elemento activo.
+            // Si requireSelection=true y no hay texto seleccionado, muestra aviso y retorna null.
+            _getQuill(requireSelection = false) {
+                if (!appState.selectedElement || !appState.selectedElement.classList.contains('text-editor')) {
+                    ErrorHandler.showToast('Selecciona un cuadro de texto primero.', 'info');
+                    return null;
+                }
+                const quillKey = `${appState.slides[appState.currentSlideIndex].id}-${appState.selectedElementIndex}`;
+                const quill = appState.quillInstances.get(quillKey);
+                if (!quill) { ErrorHandler.handle('Quill no inicializado', new Error()); return null; }
+                // Re-enfocar para que getSelection() devuelva la última selección
+                quill.focus();
+                const range = quill.getSelection();
+                if (requireSelection && (!range || range.length === 0)) {
+                    ErrorHandler.showToast('Selecciona el texto que quieres formatear.', 'info');
+                    return null;
+                }
+                return { quill, range };
+            },
             format(attribute, value = true) {
                 try {
-                    if (!appState.selectedElement || !appState.selectedElement.classList.contains('text-editor')) {
-                        alert('Selecciona un cuadro de texto primero.');
-                        return;
-                    }
-                    const quill = appState.quillInstances.get(appState.selectedElementIndex);
-                    if (!quill) throw new Error('Quill no inicializado');
-                    const range = quill.getSelection();
+                    // Alineación aplica al bloque completo aunque no haya selección
                     if (attribute === 'align') {
-                        quill.root.style.textAlign = value;
-                        quill.format('align', false);
+                        const r = TextFormatter._getQuill(false);
+                        if (!r) return;
+                        const { quill, range } = r;
                         if (range) {
-                            quill.formatText(range.index, range.length, 'align', value);
+                            quill.formatText(range.index, range.length || quill.getLength(), 'align', value);
                         } else {
                             quill.formatText(0, quill.getLength(), 'align', value);
                         }
                     } else {
-                        if (range) {
-                            quill.format(attribute, value);
-                        } else {
-                            quill.formatText(0, quill.getLength(), attribute, value);
-                        }
+                        // bold, italic, underline → solo a la selección
+                        const r = TextFormatter._getQuill(true);
+                        if (!r) return;
+                        const { quill, range } = r;
+                        quill.formatText(range.index, range.length, attribute, value);
                     }
                     HistoryManager.save();
                     SlideManager.updateThumbnail(appState.currentSlideIndex);
-                } catch (e) {
-                    ErrorHandler.handle('Error al formatear texto', e);
-                }
+                } catch (e) { ErrorHandler.handle('Error al formatear texto', e); }
             },
             changeColor(color) {
                 try {
-                    if (!appState.selectedElement || !appState.selectedElement.classList.contains('text-editor')) {
-                        alert('Selecciona un cuadro de texto primero.');
-                        return;
-                    }
-                    const quill = appState.quillInstances.get(appState.selectedElementIndex);
-                    if (!quill) throw new Error('Quill no inicializado');
-                    const range = quill.getSelection();
-                    if (range) {
-                        quill.format('color', color);
-                    } else {
-                        quill.formatText(0, quill.getLength(), 'color', color);
-                    }
+                    const r = TextFormatter._getQuill(true);
+                    if (!r) return;
+                    const { quill, range } = r;
+                    quill.formatText(range.index, range.length, 'color', color);
                     HistoryManager.save();
                     SlideManager.updateThumbnail(appState.currentSlideIndex);
-                } catch (e) {
-                    ErrorHandler.handle('Error al cambiar color', e);
-                }
+                } catch (e) { ErrorHandler.handle('Error al cambiar color', e); }
             },
             changeFont(font) {
                 try {
-                    if (!appState.selectedElement || !appState.selectedElement.classList.contains('text-editor')) {
-                        alert('Selecciona un cuadro de texto primero.');
-                        return;
-                    }
-                    const quill = appState.quillInstances.get(appState.selectedElementIndex);
-                    if (!quill) throw new Error('Quill no inicializado');
-                    const range = quill.getSelection();
-                    if (range) {
-                        quill.format('font', font);
-                    } else {
-                        quill.formatText(0, quill.getLength(), 'font', font);
-                    }
-                    quill.root.style.fontFamily = font;
+                    const r = TextFormatter._getQuill(true);
+                    if (!r) return;
+                    const { quill, range } = r;
+                    quill.formatText(range.index, range.length, 'font', font);
                     HistoryManager.save();
                     SlideManager.updateThumbnail(appState.currentSlideIndex);
-                } catch (e) {
-                    ErrorHandler.handle('Error al cambiar fuente', e);
-                }
+                } catch (e) { ErrorHandler.handle('Error al cambiar fuente', e); }
             },
             changeSize(size) {
                 try {
-                    if (!appState.selectedElement || !appState.selectedElement.classList.contains('text-editor')) {
-                        alert('Selecciona un cuadro de texto primero.');
-                        return;
-                    }
-                    const quill = appState.quillInstances.get(appState.selectedElementIndex);
-                    if (!quill) throw new Error('Quill no inicializado');
-                    const range = quill.getSelection();
-                    if (range) {
-                        quill.format('size', size);
-                    } else {
-                        quill.formatText(0, quill.getLength(), 'size', size);
-                    }
-                    quill.root.style.fontSize = size;
+                    const r = TextFormatter._getQuill(true);
+                    if (!r) return;
+                    const { quill, range } = r;
+                    quill.formatText(range.index, range.length, 'size', size);
                     HistoryManager.save();
                     SlideManager.updateThumbnail(appState.currentSlideIndex);
-                } catch (e) {
-                    ErrorHandler.handle('Error al cambiar tamaño de fuente', e);
-                }
+                } catch (e) { ErrorHandler.handle('Error al cambiar tamaño de fuente', e); }
             }
         };
 
@@ -1635,7 +2287,7 @@
             addText() {
                 try {
                     if (appState.currentSlideIndex < 0 || !appState.slides[appState.currentSlideIndex]) {
-                        alert('Por favor, crea una diapositiva primero.');
+                        ErrorHandler.showToast('Por favor, crea una diapositiva primero.', 'info');
                         SlideManager.add();
                         return;
                     }
@@ -1657,7 +2309,8 @@
                     const newTextElement = document.querySelector(`#${appState.slides[appState.currentSlideIndex].id} .draggable[data-index="${newIndex}"]`);
                     if (newTextElement) {
                         ElementManager.select(newTextElement, newIndex);
-                        const quill = appState.quillInstances.get(newIndex);
+                        const quillKey = `${appState.slides[appState.currentSlideIndex].id}-${newIndex}`;
+                        const quill = appState.quillInstances.get(quillKey);
                         if (quill) {
                             quill.root.innerHTML = CONFIG.DEFAULT_TEXT.content;
                             quill.focus();
@@ -1676,14 +2329,14 @@
             addImage() {
                 try {
                     if (appState.currentSlideIndex < 0 || !appState.slides[appState.currentSlideIndex]) {
-                        alert('Por favor, crea una diapositiva primero.');
+                        ErrorHandler.showToast('Por favor, crea una diapositiva primero.', 'info');
                         SlideManager.add();
                         return;
                     }
                     const input = document.querySelector('.image-url-input');
                     const url = input.value.trim();
                     if (!url || !url.match(/\.(jpeg|jpg|png|gif|svg)$/i)) {
-                        alert('Ingresa una URL válida (jpg, png, gif, svg).');
+                        ErrorHandler.showToast('Ingresa una URL válida (jpg, png, gif, svg).', 'info');
                         return;
                     }
                     DOM.loader.style.display = 'flex';
@@ -1716,7 +2369,7 @@
                     };
                     img.onerror = () => {
                         DOM.loader.style.display = 'none';
-                        alert('No se pudo cargar la imagen.');
+                        ErrorHandler.showToast('No se pudo cargar la imagen. Verifica la URL.', 'error');
                     };
                     img.src = url;
                 } catch (e) {
@@ -1727,7 +2380,7 @@
             addShape(shapeType) {
                 try {
                     if (appState.currentSlideIndex < 0 || !appState.slides[appState.currentSlideIndex]) {
-                        alert('Por favor, crea una diapositiva primero.');
+                        ErrorHandler.showToast('Por favor, crea una diapositiva primero.', 'info');
                         SlideManager.add();
                         return;
                     }
@@ -1766,14 +2419,17 @@
         const IOManager = {
             export() {
                 try {
-                    const dataStr = JSON.stringify(appState.slides, null, 2);
+                    const data = { slides: appState.slides, presName: appState.presName || 'Mi presentación' };
+                    const dataStr = JSON.stringify(data, null, 2);
                     const blob = new Blob([dataStr], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `Xaripod-presentation-${Date.now()}.json`;
+                    a.download = `${(appState.presName || 'Xaripod').replace(/\s+/g,'-')}-${Date.now()}.json`;
+                    document.body.appendChild(a);
                     a.click();
-                    URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 250);
                 } catch (e) {
                     ErrorHandler.handle('Error al exportar', e);
                 }
@@ -1786,7 +2442,10 @@
                     const reader = new FileReader();
                     reader.onload = (e) => {
                         try {
-                            const importedSlides = JSON.parse(e.target.result);
+                            const parsed = JSON.parse(e.target.result);
+                            // Soportar formato antiguo (array) y nuevo (objeto)
+                            const importedSlides = Array.isArray(parsed) ? parsed : (parsed.slides || []);
+                            if (parsed.presName) PresNameManager.load(parsed.presName);
                             HistoryManager.save();
                             appState.slides = importedSlides;
                             appState.currentSlideIndex = -1;
@@ -1841,7 +2500,7 @@
             
             start() {
                 if (appState.slides.length === 0) {
-                    alert('No hay diapositivas para mostrar. Crea al menos una diapositiva primero.');
+                    ErrorHandler.showToast('No hay diapositivas para mostrar. Crea al menos una diapositiva primero.', 'info');
                     return;
                 }
                 
@@ -1874,6 +2533,7 @@
                 document.body.appendChild(this.presentationElement);
                 this.currentSlide = appState.currentSlideIndex;
                 this.showCurrentSlide();
+                PresTimer.start();
                 
                 // Eventos de teclado
                 this.handleKeyDown = this.handleKeyPress.bind(this);
@@ -1884,7 +2544,7 @@
                 this.presentationElement.addEventListener('touchstart', this.handleTouchStart, { passive: false });
             },
             
-            showCurrentSlide() {
+            showCurrentSlide(direction = 'forward') {
                 if (!this.presentationElement) return;
                 
                 // Limpiar diapositiva anterior
@@ -1900,16 +2560,22 @@
                 const slideClone = originalSlide.cloneNode(true);
                 slideClone.className = 'presentation-slide';
                 slideClone.style.display = 'block';
+
+                // Aplicar fondo
+                const bg = slideData.background;
+                if (bg) {
+                    if (bg.type === 'solid') slideClone.style.background = bg.color;
+                    else if (bg.type === 'gradient') slideClone.style.background = `linear-gradient(135deg,${bg.colorA},${bg.colorB})`;
+                    else if (bg.type === 'image' && bg.url) slideClone.style.background = `url('${bg.url}') center/cover no-repeat`;
+                }
                 
-                // Eliminar elementos interactivos y ajustar estilos
+                // Eliminar elementos interactivos
                 const draggables = slideClone.querySelectorAll('.draggable');
                 draggables.forEach(el => {
                     el.classList.remove('draggable');
                     el.style.cursor = 'default';
                     const deleteBtn = el.querySelector('.delete-element');
                     if (deleteBtn) deleteBtn.remove();
-                    
-                    // Asegurar que los elementos de texto sean legibles
                     if (el.classList.contains('text-editor')) {
                         el.style.width = 'auto';
                         el.style.height = 'auto';
@@ -1917,6 +2583,18 @@
                 });
                 
                 this.presentationElement.appendChild(slideClone);
+
+                // Aplicar transición
+                const transType = document.getElementById('transitionSelect')?.value || 'none';
+                if (transType !== 'none') {
+                    let animClass = 'anim-fade';
+                    if (transType === 'slide-left')  animClass = direction === 'forward' ? 'anim-slide-left' : 'anim-slide-right';
+                    if (transType === 'slide-right') animClass = direction === 'forward' ? 'anim-slide-right' : 'anim-slide-left';
+                    if (transType === 'zoom')        animClass = 'anim-zoom';
+                    if (transType === 'fade')        animClass = 'anim-fade';
+                    slideClone.classList.add(animClass);
+                    slideClone.addEventListener('animationend', () => slideClone.classList.remove(animClass), { once: true });
+                }
                 
                 // Actualizar contador
                 const counter = this.presentationElement.querySelector('.slide-counter');
@@ -1928,9 +2606,8 @@
             nextSlide() {
                 if (this.currentSlide < appState.slides.length - 1) {
                     this.currentSlide++;
-                    this.showCurrentSlide();
+                    this.showCurrentSlide('forward');
                 } else {
-                    // Si es la última diapositiva, salir de la presentación
                     this.exit();
                 }
             },
@@ -1938,7 +2615,7 @@
             previousSlide() {
                 if (this.currentSlide > 0) {
                     this.currentSlide--;
-                    this.showCurrentSlide();
+                    this.showCurrentSlide('backward');
                 }
             },
             
@@ -1972,25 +2649,418 @@
             
             exit() {
                 if (this.presentationElement) {
-                    // Eliminar el evento de teclado
+                    // Eliminar el evento de teclado (usando la referencia guardada en start())
                     document.removeEventListener('keydown', this.handleKeyDown);
                     
                     // Eliminar el evento táctil
-                    this.presentationElement.removeEventListener('touchstart', this.handleTouchStart);
+                    if (this.handleTouchStart) {
+                        this.presentationElement.removeEventListener('touchstart', this.handleTouchStart);
+                    }
                     
                     // Eliminar el elemento de presentación
                     this.presentationElement.remove();
                     this.presentationElement = null;
+                    this.handleKeyDown = null;
+                    this.handleTouchStart = null;
+                    PresTimer.stop();
                     
                     // Restaurar el foco en la aplicación
-                    const activeSlide = document.getElementById(appState.slides[appState.currentSlideIndex].id);
-                    if (activeSlide) {
-                        activeSlide.focus();
+                    if (appState.slides[appState.currentSlideIndex]) {
+                        const activeSlide = document.getElementById(appState.slides[appState.currentSlideIndex].id);
+                        if (activeSlide) {
+                            activeSlide.focus();
+                        }
                     }
                 }
             }
         };
 
+        // =====================================================================
+        // --- MEJORA 1: ZOOM DEL EDITOR ---
+        // =====================================================================
+        const ZoomManager = {
+            levels: [50, 75, 100, 125, 150, 175, 200],
+            current: 100,
+            apply(level) {
+                this.current = level;
+                const container = DOM.slideContainer;
+                container.style.transform = `scale(${level / 100})`;
+                container.style.transformOrigin = 'top center';
+                // Ajustar el alto del wrapper para que no colapse
+                const natural = container.offsetHeight;
+                container.parentElement.style.minHeight = `${natural * (level / 100) + 40}px`;
+                document.getElementById('zoomLabel').textContent = `${level}%`;
+            },
+            increase() {
+                const idx = this.levels.indexOf(this.current);
+                if (idx < this.levels.length - 1) this.apply(this.levels[idx + 1]);
+            },
+            decrease() {
+                const idx = this.levels.indexOf(this.current);
+                if (idx > 0) this.apply(this.levels[idx - 1]);
+            }
+        };
+
+        // =====================================================================
+        // --- MEJORA 2: FONDO DE DIAPOSITIVA ---
+        // =====================================================================
+        const BgManager = {
+            onTypeChange(type) {
+                document.getElementById('bgSolidRow').style.display    = type === 'solid'    ? 'block' : 'none';
+                document.getElementById('bgGradientRow').style.display = type === 'gradient' ? 'block' : 'none';
+                document.getElementById('bgImageRow').style.display    = type === 'image'    ? 'block' : 'none';
+                BgManager.apply();
+            },
+            apply() {
+                if (appState.currentSlideIndex < 0) return;
+                const type  = document.getElementById('bgType').value;
+                const slide = appState.slides[appState.currentSlideIndex];
+                let bg = {};
+                if (type === 'solid') {
+                    bg = { type: 'solid', color: document.getElementById('bgSolidColor').value };
+                } else if (type === 'gradient') {
+                    bg = { type: 'gradient', colorA: document.getElementById('bgGradA').value, colorB: document.getElementById('bgGradB').value };
+                } else {
+                    bg = { type: 'image', url: document.getElementById('bgImageUrl').value.trim() };
+                }
+                slide.background = bg;
+                BgManager.renderBg(appState.currentSlideIndex);
+                HistoryManager.save();
+                SlideManager.updateThumbnail(appState.currentSlideIndex);
+            },
+            renderBg(slideIndex) {
+                const slide = appState.slides[slideIndex];
+                const el    = document.getElementById(slide.id);
+                if (!el) return;
+                const bg = slide.background;
+                if (!bg) { el.style.background = '#fff'; return; }
+                if (bg.type === 'solid') {
+                    el.style.background = bg.color;
+                } else if (bg.type === 'gradient') {
+                    el.style.background = `linear-gradient(135deg, ${bg.colorA}, ${bg.colorB})`;
+                } else if (bg.type === 'image' && bg.url) {
+                    el.style.background = `url('${bg.url}') center/cover no-repeat`;
+                }
+            },
+            syncUI(slideIndex) {
+                const slide = appState.slides[slideIndex];
+                if (!slide) return;
+                const bg = slide.background || { type: 'solid', color: '#ffffff' };
+                document.getElementById('bgType').value = bg.type;
+                BgManager.onTypeChange(bg.type);
+                if (bg.type === 'solid')    document.getElementById('bgSolidColor').value = bg.color || '#ffffff';
+                if (bg.type === 'gradient') {
+                    document.getElementById('bgGradA').value = bg.colorA || '#667eea';
+                    document.getElementById('bgGradB').value = bg.colorB || '#764ba2';
+                }
+                if (bg.type === 'image')    document.getElementById('bgImageUrl').value = bg.url || '';
+                // Silenciar los row visibility sin re-apply
+                document.getElementById('bgSolidRow').style.display    = bg.type === 'solid'    ? 'block' : 'none';
+                document.getElementById('bgGradientRow').style.display = bg.type === 'gradient' ? 'block' : 'none';
+                document.getElementById('bgImageRow').style.display    = bg.type === 'image'    ? 'block' : 'none';
+            }
+        };
+
+        window.toggleBgMenu = function(btn) {
+            const dd = document.getElementById('bgDropdown');
+            const isOpen = dd.style.display === 'flex';
+            if (isOpen) { dd.style.display = 'none'; return; }
+            // Posicionar el dropdown bajo el botón usando fixed
+            const rect = (btn || document.querySelector('.bg-menu button')).getBoundingClientRect();
+            dd.style.top  = (rect.bottom + 4) + 'px';
+            dd.style.left = rect.left + 'px';
+            dd.style.display = 'flex';
+            BgManager.syncUI(appState.currentSlideIndex);
+        };
+
+        // Cerrar bg dropdown al click fuera
+        document.addEventListener('click', (e) => {
+            const bgMenu = document.querySelector('.bg-menu');
+            if (bgMenu && !bgMenu.contains(e.target)) {
+                document.getElementById('bgDropdown').style.display = 'none';
+            }
+        });
+
+        // =====================================================================
+        // --- MEJORA 3: REORDENAR DIAPOSITIVAS CON DRAG ---
+        // =====================================================================
+        const ThumbDragManager = {
+            dragIdx: null,
+            setupThumb(thumbEl, slideIndex) {
+                thumbEl.setAttribute('draggable', 'true');
+                thumbEl.addEventListener('dragstart', (e) => {
+                    ThumbDragManager.dragIdx = slideIndex;
+                    thumbEl.classList.add('dragging-thumb');
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                thumbEl.addEventListener('dragend', () => {
+                    thumbEl.classList.remove('dragging-thumb');
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('drag-over'));
+                });
+                thumbEl.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    thumbEl.classList.add('drag-over');
+                });
+                thumbEl.addEventListener('dragleave', () => {
+                    thumbEl.classList.remove('drag-over');
+                });
+                thumbEl.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    thumbEl.classList.remove('drag-over');
+                    const fromIdx = ThumbDragManager.dragIdx;
+                    const toIdx   = slideIndex;
+                    if (fromIdx === null || fromIdx === toIdx) return;
+                    ThumbDragManager.reorder(fromIdx, toIdx);
+                });
+            },
+            reorder(from, to) {
+                HistoryManager.save();
+                const slides = appState.slides;
+                const [moved] = slides.splice(from, 1);
+                slides.splice(to, 0, moved);
+                // Reconstruir DOM de slides
+                DOM.slideContainer.innerHTML = '';
+                appState.quillInstances.clear();
+                slides.forEach(slide => {
+                    const div = document.createElement('div');
+                    div.className = 'slide';
+                    div.id = slide.id;
+                    DOM.slideContainer.appendChild(div);
+                });
+                const newActive = appState.currentSlideIndex === from ? to
+                    : appState.currentSlideIndex === to ? from
+                    : appState.currentSlideIndex;
+                appState.currentSlideIndex = -1;
+                SlideManager.rebuildThumbnails();
+                SlideManager.goTo(newActive);
+                LocalStorageManager.save();
+            }
+        };
+
+        // =====================================================================
+        // --- MEJORA 4: TRANSICIONES EN PRESENTACIÓN ---
+        // =====================================================================
+        // (integradas en PresentationManager.showCurrentSlide más abajo)
+
+        // =====================================================================
+        // --- MEJORA 5: GUARDAR EN LOCALSTORAGE ---
+        // =====================================================================
+        const LocalStorageManager = {
+            KEY: 'xaripod_autosave',
+            saveTimeout: null,
+            save() {
+                const indicator = document.getElementById('autosaveIndicator');
+                if (indicator) { indicator.className = 'autosave-indicator saving'; indicator.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Guardando…</span>'; }
+                clearTimeout(this.saveTimeout);
+                this.saveTimeout = setTimeout(() => {
+                    try {
+                        const data = {
+                            slides: appState.slides,
+                            currentSlideIndex: appState.currentSlideIndex,
+                            presName: appState.presName || 'Mi presentación'
+                        };
+                        localStorage.setItem(this.KEY, JSON.stringify(data));
+                        if (indicator) { indicator.className = 'autosave-indicator'; indicator.innerHTML = '<i class="fas fa-cloud"></i><span>Guardado</span>'; }
+                    } catch (e) {
+                        if (indicator) { indicator.className = 'autosave-indicator saving'; indicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Sin espacio</span>'; }
+                    }
+                }, 800);
+            },
+            load() {
+                try {
+                    const raw = localStorage.getItem(this.KEY);
+                    if (!raw) return null;
+                    return JSON.parse(raw);
+                } catch (e) { return null; }
+            },
+            clear() { localStorage.removeItem(this.KEY); }
+        };
+
+        // =====================================================================
+        // --- MEJORA 6: INDICADOR UNDO/REDO ---
+        // =====================================================================
+        function updateHistoryBadges() {
+            const undoBadge = document.getElementById('undoBadge');
+            const redoBadge = document.getElementById('redoBadge');
+            const undoSteps = appState.historyIndex;
+            const redoSteps = appState.history.length - 1 - appState.historyIndex;
+            if (undoBadge) {
+                undoBadge.textContent = undoSteps > 0 ? undoSteps : '';
+                undoBadge.style.display = undoSteps > 0 ? 'block' : 'none';
+            }
+            if (redoBadge) {
+                redoBadge.textContent = redoSteps > 0 ? redoSteps : '';
+                redoBadge.style.display = redoSteps > 0 ? 'block' : 'none';
+            }
+        }
+
+        // =====================================================================
+        // --- MODO OSCURO ---
+        // =====================================================================
+        const DarkMode = {
+            enabled: false,
+            toggle() {
+                DarkMode.enabled = !DarkMode.enabled;
+                document.body.classList.toggle('dark-mode', DarkMode.enabled);
+                const btn = document.getElementById('darkBtn');
+                if (btn) btn.innerHTML = DarkMode.enabled ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                localStorage.setItem('xaripod_darkmode', DarkMode.enabled ? '1' : '0');
+            },
+            init() {
+                if (localStorage.getItem('xaripod_darkmode') === '1') DarkMode.toggle();
+            }
+        };
+
+        // =====================================================================
+        // --- NOMBRE DE PRESENTACIÓN ---
+        // =====================================================================
+        const PresNameManager = {
+            save(name) {
+                appState.presName = name || 'Mi presentación';
+                LocalStorageManager.save();
+            },
+            load(name) {
+                const input = document.getElementById('presName');
+                if (input) input.value = name || 'Mi presentación';
+                appState.presName = name || 'Mi presentación';
+            }
+        };
+
+        // =====================================================================
+        // --- GRILLA ---
+        // =====================================================================
+        const GridManager = {
+            enabled: false,
+            toggle() {
+                GridManager.enabled = !GridManager.enabled;
+                const slide = appState.currentSlideIndex >= 0
+                    ? document.getElementById(appState.slides[appState.currentSlideIndex].id)
+                    : null;
+                // Aplicar a todos los slides
+                document.querySelectorAll('.slide').forEach(s => {
+                    s.classList.toggle('grid-on', GridManager.enabled);
+                });
+                const btn = document.getElementById('gridBtn');
+                if (btn) btn.style.background = GridManager.enabled ? '#bee3f8' : '';
+            }
+        };
+
+        // =====================================================================
+        // --- NOTAS DEL PRESENTADOR ---
+        // =====================================================================
+        const NotesManager = {
+            visible: false,
+            toggle() {
+                NotesManager.visible = !NotesManager.visible;
+                const panel = document.getElementById('notesPanel');
+                panel.classList.toggle('visible', NotesManager.visible);
+                document.body.classList.toggle('notes-open', NotesManager.visible);
+                const btn = document.getElementById('notesBtn');
+                if (btn) btn.style.background = NotesManager.visible ? '#fefcbf' : '';
+                if (NotesManager.visible) NotesManager.load(appState.currentSlideIndex);
+            },
+            save(text) {
+                if (appState.currentSlideIndex < 0) return;
+                appState.slides[appState.currentSlideIndex].notes = text;
+                LocalStorageManager.save();
+            },
+            load(slideIndex) {
+                const area = document.getElementById('notesArea');
+                const num  = document.getElementById('notesSlideNum');
+                if (!area) return;
+                area.value = (appState.slides[slideIndex] && appState.slides[slideIndex].notes) || '';
+                if (num) num.textContent = slideIndex + 1;
+            }
+        };
+
+        // =====================================================================
+        // --- HISTORIAL VISIBLE ---
+        // =====================================================================
+        const HistoryPanelManager = {
+            visible: false,
+            labels: [],
+            toggle() {
+                HistoryPanelManager.visible = !HistoryPanelManager.visible;
+                const panel = document.getElementById('historyPanel');
+                panel.classList.toggle('visible', HistoryPanelManager.visible);
+                if (HistoryPanelManager.visible) HistoryPanelManager.render();
+            },
+            // Registrar una etiqueta descriptiva cada vez que se guarda historial
+            pushLabel(label) {
+                HistoryPanelManager.labels = HistoryPanelManager.labels.slice(0, appState.historyIndex);
+                HistoryPanelManager.labels.push(label || 'Cambio');
+            },
+            render() {
+                const list = document.getElementById('historyList');
+                if (!list) return;
+                list.innerHTML = '';
+                const total = appState.history.length;
+                for (let i = 0; i < total; i++) {
+                    const item = document.createElement('div');
+                    item.className = 'history-item' +
+                        (i === appState.historyIndex ? ' current' : '') +
+                        (i > appState.historyIndex ? ' future' : '');
+                    const label = HistoryPanelManager.labels[i] || `Estado ${i + 1}`;
+                    item.textContent = `${i + 1}. ${label}`;
+                    item.title = label;
+                    item.addEventListener('click', () => {
+                        const steps = i - appState.historyIndex;
+                        if (steps > 0) { for (let s = 0; s < steps; s++) HistoryManager.redo(); }
+                        else if (steps < 0) { for (let s = 0; s < -steps; s++) HistoryManager.undo(); }
+                        HistoryPanelManager.render();
+                    });
+                    list.appendChild(item);
+                }
+                // Scroll al elemento actual
+                const current = list.querySelector('.current');
+                if (current) current.scrollIntoView({ block: 'nearest' });
+            }
+        };
+
+        // =====================================================================
+        // --- PANEL DE ATAJOS ---
+        // =====================================================================
+        const ShortcutsPanel = {
+            show() {
+                document.getElementById('shortcutsOverlay').classList.add('visible');
+            },
+            hide() {
+                document.getElementById('shortcutsOverlay').classList.remove('visible');
+            }
+        };
+
+        // =====================================================================
+        // --- TEMPORIZADOR EN PRESENTACIÓN ---
+        // =====================================================================
+        const PresTimer = {
+            interval: null,
+            seconds: 0,
+            element: null,
+            start() {
+                PresTimer.seconds = 0;
+                PresTimer.element = document.createElement('div');
+                PresTimer.element.className = 'pres-timer';
+                PresTimer.element.textContent = '00:00';
+                document.body.appendChild(PresTimer.element);
+                PresTimer.interval = setInterval(() => {
+                    PresTimer.seconds++;
+                    const m = String(Math.floor(PresTimer.seconds / 60)).padStart(2, '0');
+                    const s = String(PresTimer.seconds % 60).padStart(2, '0');
+                    PresTimer.element.textContent = `${m}:${s}`;
+                    // Aviso visual a partir de 5 minutos
+                    if (PresTimer.seconds >= 300) PresTimer.element.classList.add('warning');
+                }, 1000);
+            },
+            stop() {
+                clearInterval(PresTimer.interval);
+                PresTimer.interval = null;
+                if (PresTimer.element) { PresTimer.element.remove(); PresTimer.element = null; }
+                PresTimer.seconds = 0;
+            }
+        };
+
+        // =====================================================================
         // --- Funciones Expuestas Globalmente ---
         window.formatText = TextFormatter.format;
         window.changeTextColor = TextFormatter.changeColor;
@@ -2040,24 +3110,43 @@
         // --- Inicialización ---
         function initializeApp() {
             try {
-                SlideManager.add();
-                if (appState.slides.length > 0) {
-                    const initialTitle = {
-                        type: 'text',
-                        content: '<h1 style="margin:0;font-size:36px;">Bienvenido a Xaripod</h1>',
-                        x: 50,
-                        y: 50,
-                        width: 860,
-                        height: 60,
-                        rotation: 0,
-                        zIndex: 1,
-                        size: 100
-                    };
-                    appState.slides[0].elements.push(initialTitle);
-                    SlideManager.renderCurrent();
-                    SlideManager.updateThumbnail(0);
+                // Intentar restaurar desde localStorage
+                const saved = LocalStorageManager.load();
+                if (saved && saved.slides && saved.slides.length > 0) {
+                    appState.slides = saved.slides;
+                    appState.currentSlideIndex = -1;
+                    if (saved.presName) PresNameManager.load(saved.presName);
+                    // Construir DOM de slides
+                    saved.slides.forEach(slide => {
+                        const div = document.createElement('div');
+                        div.className = 'slide';
+                        div.id = slide.id;
+                        DOM.slideContainer.appendChild(div);
+                    });
+                    SlideManager.rebuildThumbnails();
+                    const goIdx = Math.max(0, Math.min(saved.currentSlideIndex || 0, saved.slides.length - 1));
+                    SlideManager.goTo(goIdx);
+                    saved.slides.forEach((_, i) => SlideManager.updateThumbnail(i));
+                    ErrorHandler.showToast('Sesión anterior restaurada ✓', 'info');
+                } else {
+                    // Sin datos guardados: crear presentación de bienvenida
+                    SlideManager.add();
+                    if (appState.slides.length > 0) {
+                        const initialTitle = {
+                            type: 'text',
+                            content: '<h1 style="margin:0;font-size:36px;">Bienvenido a Xaripod</h1>',
+                            x: 50, y: 50, width: 860, height: 60,
+                            rotation: 0, zIndex: 1, size: 100
+                        };
+                        appState.slides[0].elements.push(initialTitle);
+                        SlideManager.renderCurrent();
+                        SlideManager.updateThumbnail(0);
+                    }
                 }
                 adjustElementPanel();
+                updateHistoryBadges();
+                DarkMode.init();
+                PresNameManager.load(appState.presName || 'Mi presentación');
             } catch (e) {
                 ErrorHandler.handle('Error al inicializar la aplicación', e);
             }
@@ -2090,6 +3179,14 @@
             }
         });
 
+        // Cerrar dropdown de formas también con tap en móvil
+        document.addEventListener('touchstart', (e) => {
+            const shapesMenu = document.querySelector('.shapes-menu');
+            if (shapesMenu && !shapesMenu.contains(e.target)) {
+                document.getElementById('shapesDropdown').style.display = 'none';
+            }
+        }, { passive: true });
+
         document.addEventListener('keydown', (e) => {
             // Si estamos en modo presentación, dejar que PresentationManager maneje los eventos
             if (PresentationManager.presentationElement) {
@@ -2113,13 +3210,26 @@
             } else if (e.ctrlKey && e.key === 'n') {
                 e.preventDefault();
                 SlideManager.add();
+            } else if (e.ctrlKey && (e.key === '=' || e.key === '+')) {
+                e.preventDefault();
+                ZoomManager.increase();
+            } else if (e.ctrlKey && e.key === '-') {
+                e.preventDefault();
+                ZoomManager.decrease();
             } else if (e.key === 'F5') {
                 e.preventDefault();
                 PresentationManager.start();
+            } else if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+                e.preventDefault();
+                ShortcutsPanel.show();
+            } else if (e.key === 'Escape') {
+                ShortcutsPanel.hide();
             }
         });
 
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        // El script está al final del body, el DOM ya está listo. DOMContentLoaded
+        // ya se disparó antes de que este script se ejecute, por lo que se llama directamente.
+        initializeApp();
     </script>
 </body>
 </html>
